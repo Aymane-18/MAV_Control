@@ -35,6 +35,7 @@ viewers = ViewManager(animation=True,
                       video=False, video_name='chap6.mp4')
 
 # autopilot commands
+# hello
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
 # Va_command = Signals(dc_offset=25.0,
