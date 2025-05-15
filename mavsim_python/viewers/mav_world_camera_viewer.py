@@ -6,7 +6,7 @@ mavsim_python: world viewer (for chapter 12)
         3/30/2022 - RWB
 """
 import numpy as np
-from viewers.draw_mav import DrawMav
+from viewers.draw_mav_stl import DrawMav
 from viewers.draw_path import DrawPath
 from viewers.draw_waypoints import DrawWaypoints
 from viewers.draw_map import DrawMap

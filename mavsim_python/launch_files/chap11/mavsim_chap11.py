@@ -59,8 +59,8 @@ print("Press 'Esc' to exit...")
 while sim_time < end_time:
     # -------observer-------------
     measurements = mav.sensors()  # get sensor measurements
-    #estimated_state = observer.update(measurements)  # estimate states from measurements
-    estimated_state = mav.true_state  # uses true states in the control
+    estimated_state = observer.update(measurements)  # estimate states from measurements
+    #estimated_state = mav.true_state  # uses true states in the control
 
     # -------path manager-------------
     path = path_manager.update(waypoints, estimated_state, PLAN.R_min)

@@ -1,7 +1,6 @@
 """
 observer
     - Beard & McLain, PUP, 2012
-    - Completed and corrected by ChatGPT 2025
 """
 import numpy as np
 import parameters.control_parameters as CTRL

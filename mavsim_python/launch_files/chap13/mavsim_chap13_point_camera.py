@@ -9,7 +9,7 @@ mavsim_python
 import os, sys
 # insert parent directory at beginning of python search path
 from pathlib import Path
-sys.path.insert(0,os.fspath(Path(__file__).parents[1]))
+sys.path.insert(0,os.fspath(Path(__file__).parents[2]))
 # use QuitListener for Linux or PC <- doesn't work on Mac
 #from tools.quit_listener import QuitListener
 import pyqtgraph as pg
@@ -20,13 +20,13 @@ from models.camera import Camera
 from models.target_dynamics import TargetDynamics
 from models.mav_dynamics_camera import MavDynamics
 from models.gimbal import Gimbal
-from control.autopilot import Autopilot
-from estimation.observer import Observer
-from estimation.geolocation import Geolocation
+from controllers.autopilot import Autopilot
+from estimators.observer import Observer
+from estimators.geolocation import Geolocation
 from viewers.geolocation_viewer import GeolocationViewer
-from planning.path_planner import PathPlanner
-from planning.path_follower import PathFollower
-from planning.path_manager import PathManager
+from planners.path_follower import PathFollower
+from planners.path_manager import PathManager
+from planners.path_planner import PathPlanner
 from viewers.data_viewer import DataViewer
 from viewers.mav_world_camera_viewer import MAVWorldCameraViewer
 from viewers.camera_viewer import CameraViewer
@@ -74,8 +74,10 @@ autopilot = Autopilot(SIM.ts_simulation)
 observer = Observer(SIM.ts_simulation)
 path_follower = PathFollower()
 path_manager = PathManager()
-path_planner = PathPlanner(app)
 
+planner_type = 'rrt_straight'  # plan path through city using straight-line RRT
+#planner_type = 'rrt_dubins'  # plan path through city using dubins RRT
+path_planner = PathPlanner(type=planner_type)
 # initialize the simulation time
 sim_time = SIM.start_time
 plot_timer = 0
@@ -87,6 +89,7 @@ while sim_time < SIM.end_time:
     measurements = mav.sensors()  # get sensor measurements
     camera.updateProjectedPoints(mav.true_state, target.position())
     pixels = camera.getPixels()
+    
     #estimated_state = observer.update(measurements)  # estimate states from measurements
         # I occasionally get bad results with the observer.  true states seem to always work.
     estimated_state = mav.true_state
@@ -96,7 +99,7 @@ while sim_time < SIM.end_time:
         waypoints = path_planner.update(world_map, estimated_state, PLAN.R_min)
 
     # -------path manager-------------
-    path = path_manager.update(waypoints, PLAN.R_min, estimated_state)
+    path = path_manager.update(waypoints, estimated_state, PLAN.R_min)
 
     # -------path follower-------------
     autopilot_commands = path_follower.update(path, estimated_state)

@@ -1,9 +1,4 @@
-"""
-Corrected path_manager.py
-- Smart debug prints
-- Minor timeout in orbit to avoid getting stuck forever
-- Follows Beard & McLain textbook Algorithm 7, 8, 10
-"""
+
 
 import numpy as np
 from planners.dubins_parameters import DubinsParameters
@@ -261,4 +256,3 @@ class PathManager:
         if abs(distance.item()) < 20.0:
             print(f"[Halfspace Close] Distance = {distance.item():.2f}")
         return distance.item() > -1
-

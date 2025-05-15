@@ -8,7 +8,7 @@ mavsim: camera viewer (for chapter 13)
 import numpy as np
 import matplotlib.pyplot as plt
 import parameters.camera_parameters as CAM
-from tools.rotations import Euler2Rotation
+from tools.rotations import euler_to_rotation
 from message_types.msg_camera import MsgCamera
 
 class Camera:
@@ -20,8 +20,8 @@ class Camera:
     def updateProjectedPoints(self, state, target_position):
         mav_position = np.array([[state.north], [state.east], [-state.altitude]])  # NED coordinates
         # attitude of mav as a rotation matrix R from body to inertial
-        R = Euler2Rotation(state.phi, state.theta, state.psi)  # R_b^i
-        Rgim = Euler2Rotation(0, state.camera_el, state.camera_az)  # R_g^b
+        R = euler_to_rotation(state.phi, state.theta, state.psi)  # R_b^i
+        Rgim = euler_to_rotation(0, state.camera_el, state.camera_az)  # R_g^b
         Rcam = np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])  # R_g^c
         Rtarget = np.eye(3)  # R_t^i
         points = self._rotatePoints(self.target_points, Rtarget)  # rotate target to inertial frame
